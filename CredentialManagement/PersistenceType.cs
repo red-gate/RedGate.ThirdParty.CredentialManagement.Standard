@@ -1,6 +1,6 @@
 namespace CredentialManagement
 {
-    internal enum PersistenceType : uint
+    public enum PersistenceType : uint
     {
         Session = 1,
         LocalComputer = 2,

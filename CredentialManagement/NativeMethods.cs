@@ -7,10 +7,10 @@ using Microsoft.Win32.SafeHandles;
 
 namespace CredentialManagement
 {
-    internal class NativeMethods
+    public class NativeMethods
     {
         [StructLayout(LayoutKind.Sequential)]
-        internal struct CREDENTIAL
+        public struct CREDENTIAL
         {
             public int Flags;
             public int Type;
@@ -32,26 +32,26 @@ namespace CredentialManagement
 
 
         [DllImport("Advapi32.dll", EntryPoint = "CredReadW", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern bool CredRead(string target, CredentialType type, int reservedFlag, out IntPtr CredentialPtr);
+        public static extern bool CredRead(string target, CredentialType type, int reservedFlag, out IntPtr CredentialPtr);
 
         [DllImport("Advapi32.dll", EntryPoint = "CredWriteW", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern bool CredWrite([In] ref CREDENTIAL userCredential, [In] UInt32 flags);
+        public static extern bool CredWrite([In] ref CREDENTIAL userCredential, [In] UInt32 flags);
 
         [DllImport("Advapi32.dll", EntryPoint = "CredFree", SetLastError = true)]
-        internal static extern bool CredFree([In] IntPtr cred);
+        public static extern bool CredFree([In] IntPtr cred);
 
         [DllImport("advapi32.dll", EntryPoint = "CredDeleteW", CharSet = CharSet.Unicode)]
-        internal static extern bool CredDelete(StringBuilder target, CredentialType type, int flags);
+        public static extern bool CredDelete(StringBuilder target, CredentialType type, int flags);
 
-        internal sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
+        public sealed class CriticalCredentialHandle : CriticalHandleZeroOrMinusOneIsInvalid
         {
             // Set the handle.
-            internal CriticalCredentialHandle(IntPtr preexistingHandle)
+            public CriticalCredentialHandle(IntPtr preexistingHandle)
             {
                 SetHandle(preexistingHandle);
             }
 
-            internal CREDENTIAL GetCredential()
+            public CREDENTIAL GetCredential()
             {
                 if (!IsInvalid)
                 {

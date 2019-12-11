@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CredentialManagement
 {
-    internal class Credential: IDisposable
+    public class Credential: IDisposable
     {
 
         static object _lockObject = new object();
