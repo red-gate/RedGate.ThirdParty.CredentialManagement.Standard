@@ -7,12 +7,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
 
       - name: Build project
         run: dotnet build --configuration Release
-        # Sign dll
+
+      - uses: ./.github/actions/sign-artifacts
+        with:
+          artifacts: |
+            ./CredentialManagement/bin/Release/netstandard2.0/RedGate.ThirdParty.CredentialManagement.Standard.dll
+
       - name: Create the package
         run: dotnet pack --configuration Release
         # Publish the package to NuGet
