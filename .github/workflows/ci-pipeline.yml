@@ -11,3 +11,10 @@ jobs:
         uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '10.0.x'
+
+      - name: Build project
+        run: dotnet build --configuration Release
+        # Sign dll
+      - name: Create the package
+        run: dotnet pack --configuration Release
+        # Publish the package to NuGet
