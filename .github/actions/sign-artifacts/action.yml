@@ -1,0 +1,65 @@
+name: "Sign artifacts"
+
+description: "Sign artifacts using dotnet sign tool"
+
+inputs:
+  artifacts:
+    description: "Path to the artifact to be signed"
+    required: true
+
+runs:
+  using: "composite"
+  
+  steps:
+    - name: Install sign tool
+      shell: bash
+      run: |
+        dotnet tool install sign --tool-path "./.signing" --version 0.9.1-beta.25278.1
+
+    - name: Get Vault Secrets
+      uses: hashicorp/vault-action@v3.4.0
+      with:
+        method: jwt
+        url: https://vault.red-gate.com
+        path: gha_jwt
+        role: "gha-CredentialManagement"
+        secrets: |
+          build-secrets/data/shared/dotnet_sign_sp user | USER;
+          build-secrets/data/shared/dotnet_sign_sp user_password | PASSWORD;
+          build-secrets/data/shared/dotnet_sign_sp tenant_id | TENANT;
+          build-secrets/data/shared/dotnet_sign_sp key_vault_url | VAULT_URL;
+          build-secrets/data/shared/dotnet_sign_sp key_vault_certificate_name | VAULT_CERTIFICATE;
+
+    - name: Azure login
+      shell: bash
+      run: az login --allow-no-subscriptions --service-principal -u "$USER" -p "$PASSWORD" --tenant "$TENANT"
+
+    - name: Sign artifact
+      shell: pwsh
+      run: |
+        $artifacts = "${{ inputs.artifacts }}" -split ","
+
+        foreach ($artifact in $artifacts)
+        {
+          $trimmedArtifact = $artifact.Trim()
+
+          ./.signing/sign code azure-key-vault `
+            $trimmedArtifact `
+            --description "Red Gate Software Ltd." `
+            -u "https://www.red-gate.com" `
+            -kvu "$env:VAULT_URL" `
+            -kvc "$env:VAULT_CERTIFICATE" `
+            -kvm $true `
+        }
+
+    - name: Validate signature
+      shell: pwsh
+      run: |
+        $artifacts = "${{ inputs.artifacts }}" -split ","
+
+        foreach ($artifact in $artifacts)
+        {       
+          $trimmedArtifact = $artifact.Trim()
+     
+          ./.github/actions/sign-artifacts/validate-signature.ps1 $trimmedArtifact
+        }
