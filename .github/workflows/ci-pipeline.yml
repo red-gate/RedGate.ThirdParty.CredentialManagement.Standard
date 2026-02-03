@@ -1,0 +1,18 @@
+name: CI Pipeline
+on: [push, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+
+      - name: Build project
+        run: dotnet build --configuration Release
+        # Sign dll
+      - name: Create the package
+        run: dotnet pack --configuration Release
+        # Publish the package to NuGet
