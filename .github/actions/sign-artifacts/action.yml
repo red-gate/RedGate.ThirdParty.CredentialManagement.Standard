@@ -14,7 +14,8 @@ runs:
     - name: Install sign tool
       shell: bash
       run: |
-        dotnet tool install sign --tool-path "./.signing" --version 0.9.1-beta.25278.1
+        mkdir '.signing'
+        dotnet tool install --tool-path "./.signing" --prerelease sign
 
     - name: Get Vault Secrets
       uses: hashicorp/vault-action@v3.4.0
@@ -50,6 +51,8 @@ runs:
             -kvu "$env:VAULT_URL" `
             -kvc "$env:VAULT_CERTIFICATE" `
             -kvm $true `
+            
+          if ($LASTEXITCODE -ne 0) { throw "Failed to sign files" }
         }
 
     - name: Validate signature
