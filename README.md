@@ -19,6 +19,5 @@ We have removed classes and methods we do not use, and assimilated these classes
 * secondly, the Credential Management Windows API is very stable, so we're unlikely to need constant bleeding-edge updates.
 
 # Publishing a package
-Build using your favorite IDE
-From the repo root,
-"<path to nuget exe: .\.build\nuget.exe>" push "<path to nupkg: .\CredentialManagement\bin\Debug\RedGate.ThirdParty.CredentialManagement.Standard.1.0.X.nupkg >" -apikey <VSTS_API_key> -source https://red-gate.pkgs.visualstudio.com/_packaging/Main/nuget/v3/index.json
+
+This project automatically builds, signs, packages and pushes to the RedGate NuGet reprository on pushes to the default branch using the ci-pipeline GitHub workflow.
