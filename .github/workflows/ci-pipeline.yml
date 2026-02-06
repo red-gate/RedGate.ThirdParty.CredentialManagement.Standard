@@ -29,4 +29,9 @@ jobs:
 
       - name: Create the package
         run: dotnet pack --configuration Release
-        # Publish the package to NuGet
+
+      - name: Publish to NuGet
+        uses: ./.github/actions/push-package
+        with:
+          path: ./CredentialManagement/bin/Release
+          package: RedGate.ThirdParty.CredentialManagement.Standard
