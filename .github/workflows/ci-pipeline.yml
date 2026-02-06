@@ -1,6 +1,10 @@
 name: CI Pipeline
 on: [push, workflow_dispatch]
 
+permissions:
+  id-token: write # required for hashicorp/vault-action to work
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-slim
