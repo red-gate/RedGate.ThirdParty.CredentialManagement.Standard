@@ -18,7 +18,8 @@ jobs:
       - name: Build project
         run: dotnet build --configuration Release
 
-      - uses: ./.github/actions/sign-artifacts
+      - name: Sign artifacts
+        uses: ./.github/actions/sign-artifacts
         with:
           artifacts: |
             ./CredentialManagement/bin/Release/netstandard2.0/RedGate.ThirdParty.CredentialManagement.Standard.dll
