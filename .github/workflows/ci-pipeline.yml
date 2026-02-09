@@ -1,18 +1,37 @@
 name: CI Pipeline
-on: [push, workflow_dispatch]
+on: 
+  push:
+    branches: [ master ]
+  workflow_dispatch:
+
+permissions:
+  id-token: write # required for hashicorp/vault-action to work
+  contents: read
 
 jobs:
   build:
-    runs-on: ubuntu-slim
+    runs-on: windows-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
+
       - name: Set up .NET
         uses: actions/setup-dotnet@v5
 
       - name: Build project
         run: dotnet build --configuration Release
-        # Sign dll
+
+      - name: Sign artifacts
+        uses: ./.github/actions/sign-artifacts
+        with:
+          artifacts: |
+            ./CredentialManagement/bin/Release/netstandard2.0/RedGate.ThirdParty.CredentialManagement.Standard.dll
+
       - name: Create the package
         run: dotnet pack --configuration Release
-        # Publish the package to NuGet
+
+      - name: Publish to NuGet
+        uses: ./.github/actions/push-package
+        with:
+          path: ./CredentialManagement/bin/Release
+          package: RedGate.ThirdParty.CredentialManagement.Standard
