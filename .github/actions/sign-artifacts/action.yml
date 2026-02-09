@@ -48,9 +48,9 @@ runs:
             $trimmedArtifact `
             --description "Red Gate Software Ltd." `
             -u "https://www.red-gate.com" `
+            -act "azure-cli" `
             -kvu "$env:VAULT_URL" `
             -kvc "$env:VAULT_CERTIFICATE" `
-            -kvm $true `
             
           if ($LASTEXITCODE -ne 0) { throw "Failed to sign files" }
         }
