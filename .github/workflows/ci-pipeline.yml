@@ -29,7 +29,7 @@ jobs:
         run: dotnet pack --configuration Release
 
       - name: Publish to NuGet
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         uses: ./.github/actions/push-package
         with:
           path: ./CredentialManagement/bin/Release
