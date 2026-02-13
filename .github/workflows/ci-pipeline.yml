@@ -1,8 +1,5 @@
 name: CI Pipeline
-on: 
-  push:
-    branches: [ master ]
-  workflow_dispatch:
+on: [push, workflow_dispatch]
 
 permissions:
   id-token: write # required for hashicorp/vault-action to work
@@ -31,6 +28,7 @@ jobs:
         run: dotnet pack --configuration Release
 
       - name: Publish to NuGet
+        if: github.ref == 'refs/heads/master'
         uses: ./.github/actions/push-package
         with:
           path: ./CredentialManagement/bin/Release
